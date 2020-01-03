@@ -1,6 +1,7 @@
 # LABYRINTH OF DEATH #
 
-[![Generic badge](https://img.shields.io/badge/version-v1.0.0-green.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)[![LICENSE](https://img.shields.io/badge/license-GNU General Public License v3.0-blue.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
+[![Generic badge](https://img.shields.io/badge/version-v1.0.0-green.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-GNU%20General%20Public%20License%20v3.0-blue.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
 
 ## Installation ##
 
