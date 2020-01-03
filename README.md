@@ -19,8 +19,7 @@ If the game is started, a window opens named CONTROLLER. The focus must always b
 
 ## Key Binding ##
 
-|      |           |      |      |
-| :--- | :-------- | ---- | ---- |
+| ---- | --------- | ---- | ---- |
 | W    | Go top    |      |      |
 | A    | Go left   |      |      |
 | S    | Go bottom |      |      |
@@ -28,5 +27,4 @@ If the game is started, a window opens named CONTROLLER. The focus must always b
 | p    | Pause     |      |      |
 | r    | New Game  |      |      |
 | q    | Quit      |      |      |
-|      |           |      |      |
 
