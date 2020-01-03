@@ -1,6 +1,7 @@
 # LABYRINTH OF DEATH #
 
-[![Generic badge](https://img.shields.io/badge/version-v1.0.0-green.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)[![LICENSE](https://img.shields.io/badge/license-GNU General Public License v3.0-blue.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
+[![Generic badge](https://img.shields.io/badge/version-v1.0.0-green.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/badge/license-GNU General Public License v3.0-blue.svg)](https://github.com/jcobs-engine/labyrinth_of_death/blob/master/LICENSE)
 
 ## Installation ##
 
@@ -19,8 +20,7 @@ If the game is started, a window opens named CONTROLLER. The focus must always b
 
 ## Key Binding ##
 
-|      |           |      |      |
-| :--- | :-------- | ---- | ---- |
+
 | W    | Go top    |      |      |
 | A    | Go left   |      |      |
 | S    | Go bottom |      |      |
@@ -28,5 +28,4 @@ If the game is started, a window opens named CONTROLLER. The focus must always b
 | p    | Pause     |      |      |
 | r    | New Game  |      |      |
 | q    | Quit      |      |      |
-|      |           |      |      |
 
