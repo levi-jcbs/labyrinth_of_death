@@ -6,7 +6,7 @@ echo 'n' > .gp.txt
 
 sleep 1
 echo 'd' > .gp.txt
-xfce4-terminal --title="CONTROLLER" --geometry 40x10 --hide-menubar -e="bash .controller.sh" &
+xfce4-terminal --title="CONTROLLER" --geometry 1x1 --hide-menubar -e="bash .controller.sh" &
 
 while [ 1 ]; do
 
@@ -78,6 +78,12 @@ gohome () {
 	eval three_posx=12
 	eval three_posy=62
     fi
+
+    if [ "$1" == 'four' ]; then
+	eval 'x'$four_posx'y'$four_posy='+'
+	eval four_posx=11
+	eval four_posy=75
+    fi
     
 }
 
@@ -129,6 +135,17 @@ three_posy=1
 three_oldpos='bla'
 
 three_dead=0
+# FOUR
+four_live=1
+
+four_hp=10
+
+four_posx=2
+four_posy=1
+
+four_oldpos='bla'
+
+four_dead=0
 # [ END ]
 
 go=0
@@ -202,6 +219,25 @@ xwidth 2 2 34
     height 16 67 1
     xwidth 13 61 4
 
+
+	x=1
+	while [ $x -le 20 ]; do
+	    y=1
+	    while [ $y -le 78 ]; do
+		xyc='x'$x'y'$y
+		if test ${!xyc} == '+'; then
+		    monsterand=$(( $RANDOM % 50 ))
+		    if [ $monsterand -eq 1 ]; then
+			eval $xyc='M'
+		    fi
+		fi
+		y=$(( $y + 1 ))
+	    done
+	    x=$(( $x + 1 ))
+	done
+
+
+    
 round=0
     break=0
 while [ $break -eq 0 ]; do
@@ -231,6 +267,7 @@ while [ $break -eq 0 ]; do
     one_gohome=0
     two_gohome=0
     three_gohome=0
+    four_gohome=0
 
     
     
@@ -273,6 +310,16 @@ while [ $break -eq 0 ]; do
     three_ym1='x'$three_posx'y'$(( $three_posy - 1 ))
     three_ym1_C="${!three_ym1}"
 
+    
+    four_xp1='x'$(( $four_posx + 1 ))'y'$four_posy
+    four_xp1_C="${!four_xp1}"
+    four_yp1='x'$four_posx'y'$(( $four_posy + 1 ))
+    four_yp1_C="${!four_yp1}"
+    four_xm1='x'$(( $four_posx - 1 ))'y'$four_posy
+    four_xm1_C="${!four_xm1}"
+    four_ym1='x'$four_posx'y'$(( $four_posy - 1 ))
+    four_ym1_C="${!four_ym1}"
+
 
     
     
@@ -292,43 +339,11 @@ while [ $break -eq 0 ]; do
     if [ $three_hp -gt 10 ]; then
 	three_hp=10
     fi
-    
+    if [ $four_hp -gt 10 ]; then
+	four_hp=10
+    fi
 
     
-    if [ $go -ne 1 ]; then
-	x=1
-	while [ $x -le 20 ]; do
-	    y=1
-	    while [ $y -le 78 ]; do
-		xyc='x'$x'y'$y
-		monsterxyc='monsterx'$x'y'$y
-		eval $monsterxyc='0'
-		if test ${!xyc} == '+'; then
-		    monsterand=$(( $RANDOM % 30 ))
-		    if [ $monsterand -eq 1 ]; then
-			eval $xyc='M'
-			eval $monsterxyc=1
-		    fi
-		fi
-		y=$(( $y + 1 ))
-	    done
-	    x=$(( $x + 1 ))
-	done
-    else
-	x=1
-	while [ $x -le 20 ]; do
-	    y=1
-	    while [ $y -le 78 ]; do
-		xyc='x'$x'y'$y
-		monsterxyc='monsterx'$x'y'$y
-		if test "${!monsterxyc}" == '1'; then
-		    eval $xyc='M'
-		fi
-		y=$(( $y + 1 ))
-	    done
-	    x=$(( $x + 1 ))
-	done
-    fi    
     
     x5y67='#'
 
@@ -338,6 +353,7 @@ while [ $break -eq 0 ]; do
     one_hp_C=$one_hp
     two_hp_C=$two_hp
     three_hp_C=$three_hp
+    four_hp_C=$four_hp
         
 
     
@@ -358,13 +374,6 @@ while [ $break -eq 0 ]; do
 	zero_xm1='x'$(( $zero_posx - 1 ))'y'$zero_posy
 	zero_ym1='x'$zero_posx'y'$(( $zero_posy - 1 ))
 
-	zero_mxp1='monsterx'$(( $zero_posx + 1 ))'y'$zero_posy
-	zero_myp1='monsterx'$zero_posx'y'$(( $zero_posy + 1 ))
-	
-	zero_mxm1='monsterx'$(( $zero_posx - 1 ))'y'$zero_posy
-	zero_mym1='monsterx'$zero_posx'y'$(( $zero_posy - 1 ))
-
-	
 	
 	if [ $go -eq 1 ]; then
 	    zero_ooldpos='x'$zero_posx'y'$zero_posy
@@ -491,22 +500,18 @@ while [ $break -eq 0 ]; do
 	    if [ "${!zero_xp1}" == 'M' ] && [ "$zero_oldpos" != "$zero_xp1" ]; then
 		zero_hp=$(( $zero_hp - 2 ))
 		eval $zero_xp1='+'
-		eval $zero_mxp1='0'
 	    fi
 	    if [ "${!zero_yp1}" == 'M' ] && [ "$zero_oldpos" != "$zero_yp1" ]; then
 		zero_hp=$(( $zero_hp - 2 ))
 		eval $zero_yp1='+'
-		eval $zero_myp1='0'
 	    fi
 	    if [ "${!zero_xm1}" == 'M' ] && [ "$zero_oldpos" != "$zero_xm1" ]; then
 		zero_hp=$(( $zero_hp - 2 ))
 		eval $zero_xm1='+'
-		eval $zero_mxm1='0'
 	    fi
 	    if [ "${!zero_ym1}" == 'M' ] && [ "$zero_oldpos" != "$zero_ym1" ]; then
 		zero_hp=$(( $zero_hp - 2 ))
 		eval $zero_ym1='+'
-		eval $zero_mym1='0'
 	    fi
 
 	    #                                KÄMPFE                                 #
@@ -612,6 +617,40 @@ while [ $break -eq 0 ]; do
 			zero_hp=$(( $zero_hp - 4 ))
 		    fi
 		    zero_gohome=1
+		fi
+
+		#FOUR
+		if [ "$zero_xp1_C" == '4' ]; then
+		    if [ $zero_hp_C -gt $four_hp_C ]; then
+			zero_hp=$(( $zero_hp - 1 ))
+		    else
+			zero_hp=$(( $zero_hp - 4 ))
+		    fi
+		    zero_gohome=1
+		fi
+		if [ "$zero_yp1_C" == '4' ]; then
+		    if [ $zero_hp_C -gt $four_hp_C ]; then
+			zero_hp=$(( $zero_hp - 1 ))
+		    else
+			zero_hp=$(( $zero_hp - 4 ))
+		    fi
+		    zero_gohome=1
+		fi
+		if [ "$zero_xm1_C" == '4' ]; then
+		    if [ $zero_hp_C -gt $four_hp_C ]; then
+			zero_hp=$(( $zero_hp - 1 ))
+		    else
+			zero_hp=$(( $zero_hp - 4 ))
+		    fi
+		    zero_gohome=1
+		fi
+		if [ "$zero_ym1_C" == '4' ]; then
+		    if [ $zero_hp_C -gt $four_hp_C ]; then
+			zero_hp=$(( $zero_hp - 1 ))
+		    else
+			zero_hp=$(( $zero_hp - 4 ))
+		    fi
+		    zero_gohome=1
 		fi	
 	    fi
 
@@ -668,14 +707,7 @@ while [ $break -eq 0 ]; do
 	one_xm1='x'$(( $one_posx - 1 ))'y'$one_posy
 	one_ym1='x'$one_posx'y'$(( $one_posy - 1 ))
 
-	one_mxp1='monsterx'$(( $one_posx + 1 ))'y'$one_posy
-	one_myp1='monsterx'$one_posx'y'$(( $one_posy + 1 ))
-	
-	one_mxm1='monsterx'$(( $one_posx - 1 ))'y'$one_posy
-	one_mym1='monsterx'$one_posx'y'$(( $one_posy - 1 ))
-
-	
-	
+		
 	if [ $go -eq 1 ]; then
 	    one_ooldpos='x'$one_posx'y'$one_posy
 	fi
@@ -876,22 +908,18 @@ while [ $break -eq 0 ]; do
 	    if [ "${!one_xp1}" == 'M' ] && [ "$one_oldpos" != "$one_xp1" ]; then
 		one_hp=$(( $one_hp - 2 ))
 		eval $one_xp1='+'
-		eval $one_mxp1='0'
 	    fi
 	    if [ "${!one_yp1}" == 'M' ] && [ "$one_oldpos" != "$one_yp1" ]; then
 		one_hp=$(( $one_hp - 2 ))
 		eval $one_yp1='+'
-		eval $one_myp1='0'
 	    fi
 	    if [ "${!one_xm1}" == 'M' ] && [ "$one_oldpos" != "$one_xm1" ]; then
 		one_hp=$(( $one_hp - 2 ))
 		eval $one_xm1='+'
-		eval $one_mxm1='0'
 	    fi
 	    if [ "${!one_ym1}" == 'M' ] && [ "$one_oldpos" != "$one_ym1" ]; then
 		one_hp=$(( $one_hp - 2 ))
 		eval $one_ym1='+'
-		eval $one_mym1='0'
 	    fi	
 
 	    
@@ -999,6 +1027,41 @@ while [ $break -eq 0 ]; do
 			one_hp=$(( $one_hp - 4 ))
 		    fi
 		    one_gohome=1
+		fi
+
+		
+		#FOUR
+		if [ "$one_xp1_C" == '4' ]; then
+		    if [ $one_hp_C -gt $four_hp_C ]; then
+			one_hp=$(( $one_hp - 1 ))
+		    else
+			one_hp=$(( $one_hp - 4 ))
+		    fi
+		    one_gohome=1
+		fi
+		if [ "$one_yp1_C" == '4' ]; then
+		    if [ $one_hp_C -gt $four_hp_C ]; then
+			one_hp=$(( $one_hp - 1 ))
+		    else
+			one_hp=$(( $one_hp - 4 ))
+		    fi
+		    one_gohome=1
+		fi
+		if [ "$one_xm1_C" == '4' ]; then
+		    if [ $one_hp_C -gt $four_hp_C ]; then
+			one_hp=$(( $one_hp - 1 ))
+		    else
+			one_hp=$(( $one_hp - 4 ))
+		    fi
+		    one_gohome=1
+		fi
+		if [ "$one_ym1_C" == '4' ]; then
+		    if [ $one_hp_C -gt $four_hp_C ]; then
+			one_hp=$(( $one_hp - 1 ))
+		    else
+			one_hp=$(( $one_hp - 4 ))
+		    fi
+		    one_gohome=1
 		fi	
 	    fi
 
@@ -1059,14 +1122,6 @@ while [ $break -eq 0 ]; do
 	two_xm1='x'$(( $two_posx - 1 ))'y'$two_posy
 	two_ym1='x'$two_posx'y'$(( $two_posy - 1 ))
 
-	two_mxp1='monsterx'$(( $two_posx + 1 ))'y'$two_posy
-	two_myp1='monsterx'$two_posx'y'$(( $two_posy + 1 ))
-	
-	two_mxm1='monsterx'$(( $two_posx - 1 ))'y'$two_posy
-	two_mym1='monsterx'$two_posx'y'$(( $two_posy - 1 ))
-
-	
-	
 	if [ $go -eq 1 ]; then
 	    two_ooldpos='x'$two_posx'y'$two_posy
 	fi
@@ -1268,22 +1323,18 @@ while [ $break -eq 0 ]; do
 	    if [ "${!two_xp1}" == 'M' ] && [ "$two_oldpos" != "$two_xp1" ]; then
 		two_hp=$(( $two_hp - 2 ))
 		eval $two_xp1='+'
-		eval $two_mxp1='0'
 	    fi
 	    if [ "${!two_yp1}" == 'M' ] && [ "$two_oldpos" != "$two_yp1" ]; then
 		two_hp=$(( $two_hp - 2 ))
 		eval $two_yp1='+'
-		eval $two_myp1='0'
 	    fi
 	    if [ "${!two_xm1}" == 'M' ] && [ "$two_oldpos" != "$two_xm1" ]; then
 		two_hp=$(( $two_hp - 2 ))
 		eval $two_xm1='+'
-		eval $two_mxm1='0'
 	    fi
 	    if [ "${!two_ym1}" == 'M' ] && [ "$two_oldpos" != "$two_ym1" ]; then
 		two_hp=$(( $two_hp - 2 ))
 		eval $two_ym1='+'
-		eval $two_mym1='0'
 	    fi	
 
 
@@ -1362,33 +1413,33 @@ while [ $break -eq 0 ]; do
 		fi
 		
 		
-		#THREE
-		if [ "$two_xp1_C" == '3' ]; then
-		    if [ $two_hp_C -gt $three_hp_C ]; then
+		#FOUR
+		if [ "$two_xp1_C" == '4' ]; then
+		    if [ $two_hp_C -gt $four_hp_C ]; then
 			two_hp=$(( $two_hp - 1 ))
 		    else
 			two_hp=$(( $two_hp - 4 ))
 		    fi
 		    two_gohome=1
 		fi
-		if [ "$two_yp1_C" == '3' ]; then
-		    if [ $two_hp_C -gt $three_hp_C ]; then
+		if [ "$two_yp1_C" == '4' ]; then
+		    if [ $two_hp_C -gt $four_hp_C ]; then
 			two_hp=$(( $two_hp - 1 ))
 		    else
 			two_hp=$(( $two_hp - 4 ))
 		    fi
 		    two_gohome=1
 		fi
-		if [ "$two_xm1_C" == '3' ]; then
-		    if [ $two_hp_C -gt $three_hp_C ]; then
+		if [ "$two_xm1_C" == '4' ]; then
+		    if [ $two_hp_C -gt $four_hp_C ]; then
 			two_hp=$(( $two_hp - 1 ))
 		    else
 			two_hp=$(( $two_hp - 4 ))
 		    fi
 		    two_gohome=1
 		fi
-		if [ "$two_ym1_C" == '3' ]; then
-		    if [ $two_hp_C -gt $three_hp_C ]; then
+		if [ "$two_ym1_C" == '4' ]; then
+		    if [ $two_hp_C -gt $four_hp_C ]; then
 			two_hp=$(( $two_hp - 1 ))
 		    else
 			two_hp=$(( $two_hp - 4 ))
@@ -1452,12 +1503,6 @@ while [ $break -eq 0 ]; do
 	
 	three_xm1='x'$(( $three_posx - 1 ))'y'$three_posy
 	three_ym1='x'$three_posx'y'$(( $three_posy - 1 ))
-
-	three_mxp1='monsterx'$(( $three_posx + 1 ))'y'$three_posy
-	three_myp1='monsterx'$three_posx'y'$(( $three_posy + 1 ))
-	
-	three_mxm1='monsterx'$(( $three_posx - 1 ))'y'$three_posy
-	three_mym1='monsterx'$three_posx'y'$(( $three_posy - 1 ))
 
 	
 	
@@ -1661,29 +1706,25 @@ while [ $break -eq 0 ]; do
 	    if [ "${!three_xp1}" == 'M' ] && [ "$three_oldpos" != "$three_xp1" ]; then
 		three_hp=$(( $three_hp - 2 ))
 		eval $three_xp1='+'
-		eval $three_mxp1='0'
 	    fi
 	    if [ "${!three_yp1}" == 'M' ] && [ "$three_oldpos" != "$three_yp1" ]; then
 		three_hp=$(( $three_hp - 2 ))
 		eval $three_yp1='+'
-		eval $three_myp1='0'
 	    fi
 	    if [ "${!three_xm1}" == 'M' ] && [ "$three_oldpos" != "$three_xm1" ]; then
 		three_hp=$(( $three_hp - 2 ))
 		eval $three_xm1='+'
-		eval $three_mxm1='0'
 	    fi
 	    if [ "${!three_ym1}" == 'M' ] && [ "$three_oldpos" != "$three_ym1" ]; then
 		three_hp=$(( $three_hp - 2 ))
 		eval $three_ym1='+'
-		eval $three_mym1='0'
 	    fi	
 	    
 
 	    
 	    #                                KÄMPFE                                 #
 
-	    if [ $round -ge 20 ]; then
+	    if [ $round -ge 40 ]; then
 		#ZERO
 		if [ "$three_xp1_C" == '0' ]; then
 		    if [ $three_hp_C -gt $zero_hp_C ]; then
@@ -1754,7 +1795,7 @@ while [ $break -eq 0 ]; do
 		fi
 		
 		#TWO
-		if [ "$three_xp1_C" == '2' ]; then
+		if [ "$three_xp1_C" == '4' ]; then
 		    if [ $three_hp_C -gt $two_hp_C ]; then
 			three_hp=$(( $three_hp - 1 ))
 		    else
@@ -1762,7 +1803,7 @@ while [ $break -eq 0 ]; do
 		    fi
 		    three_gohome=1
 		fi
-		if [ "$three_yp1_C" == '2' ]; then
+		if [ "$three_yp1_C" == '4' ]; then
 		    if [ $three_hp_C -gt $two_hp_C ]; then
 			three_hp=$(( $three_hp - 1 ))
 		    else
@@ -1770,7 +1811,7 @@ while [ $break -eq 0 ]; do
 		    fi
 		    three_gohome=1
 		fi
-		if [ "$three_xm1_C" == '2' ]; then
+		if [ "$three_xm1_C" == '4' ]; then
 		    if [ $three_hp_C -gt $two_hp_C ]; then
 			three_hp=$(( $three_hp - 1 ))
 		    else
@@ -1778,8 +1819,42 @@ while [ $break -eq 0 ]; do
 		    fi
 		    three_gohome=1
 		fi
-		if [ "$three_ym1_C" == '2' ]; then
+		if [ "$three_ym1_C" == '4' ]; then
 		    if [ $three_hp_C -gt $two_hp_C ]; then
+			three_hp=$(( $three_hp - 1 ))
+		    else
+			three_hp=$(( $three_hp - 4 ))
+		    fi
+		    three_gohome=1
+		fi
+		
+		#FOUR
+		if [ "$three_xp1_C" == '4' ]; then
+		    if [ $three_hp_C -gt $four_hp_C ]; then
+			three_hp=$(( $three_hp - 1 ))
+		    else
+			three_hp=$(( $three_hp - 4 ))
+		    fi
+		    three_gohome=1
+		fi
+		if [ "$three_yp1_C" == '4' ]; then
+		    if [ $three_hp_C -gt $four_hp_C ]; then
+			three_hp=$(( $three_hp - 1 ))
+		    else
+			three_hp=$(( $three_hp - 4 ))
+		    fi
+		    three_gohome=1
+		fi
+		if [ "$three_xm1_C" == '4' ]; then
+		    if [ $three_hp_C -gt $four_hp_C ]; then
+			three_hp=$(( $three_hp - 1 ))
+		    else
+			three_hp=$(( $three_hp - 4 ))
+		    fi
+		    three_gohome=1
+		fi
+		if [ "$three_ym1_C" == '4' ]; then
+		    if [ $three_hp_C -gt $four_hp_C ]; then
 			three_hp=$(( $three_hp - 1 ))
 		    else
 			three_hp=$(( $three_hp - 4 ))
@@ -1794,7 +1869,7 @@ while [ $break -eq 0 ]; do
 	    #
 	    
 	fi
-
+	
 	
 	if [ $go -eq 1 ]; then
 	    three_oldpos=$three_ooldpos
@@ -1809,17 +1884,433 @@ while [ $break -eq 0 ]; do
 	    three_dead=1
 	fi
     fi
-	
+    
     #
     #                                                       NEXT PERSON
     #
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #        4
+    #       44
+    #      4 4
+    #     4  4
+    #    4   4
+    #   4    4
+    #  4444444444
+    #        4
+    #        4
     
+    if [ $four_hp -gt 0 ]; then
+    
+	four_xp1='x'$(( $four_posx + 1 ))'y'$four_posy
+	four_yp1='x'$four_posx'y'$(( $four_posy + 1 ))
+	
+	four_xm1='x'$(( $four_posx - 1 ))'y'$four_posy
+	four_ym1='x'$four_posx'y'$(( $four_posy - 1 ))
+
+	
+	
+	if [ $go -eq 1 ]; then
+	    four_ooldpos='x'$four_posx'y'$four_posy
+	fi
+	
+	four_opt=0
+	
+	four_oxp1=0
+	four_oyp1=0
+	four_oxm1=0
+	four_oym1=0
+	
+	
+	if test "$four_oldpos" != "bla"; then
+
+	    ### FREIE FELDER ERMITTELN
+	    
+	    if [ "${!four_xp1}" == '+' ] && [ "$four_oldpos" != "$four_xp1" ]; then
+		four_opt=$(( $four_opt + 1 ))
+		four_oxp1=1
+	    fi
+	    
+	    if [ "${!four_yp1}" == '+' ] && [ "$four_oldpos" != "$four_yp1" ]; then
+		four_opt=$(( $four_opt + 1 ))
+		four_oyp1=1
+	    fi
+	    
+	    if [ "${!four_xm1}" == '+' ] && [ "$four_oldpos" != "$four_xm1" ]; then
+		four_opt=$(( $four_opt + 1 ))
+		four_oxm1=1
+	    fi
+	    if [ "${!four_ym1}" == '+' ] && [ "$four_oldpos" != "$four_ym1" ]; then
+		four_opt=$(( $four_opt + 1 ))
+		four_oym1=1
+	    fi	
+	    
+	    
+	    rand=''
+	    
+	    block=0
+	    block2=0
+	    
+	    #
+	    #       OPTIONS DURCHTESTEN
+	    #
+	    
+	    if [ $four_opt -eq 1 ]; then
+		if [ $four_oxp1 -eq 1 ]; then
+		    four_posx=$(( $four_posx + 1 ))
+		fi
+		if [ $four_oyp1 -eq 1 ]; then
+		    four_posy=$(( $four_posy + 1 ))
+		fi
+		if [ $four_oxm1 -eq 1 ]; then
+		    four_posx=$(( $four_posx - 1 ))
+		fi
+		if [ $four_oym1 -eq 1 ]; then
+		    four_posy=$(( $four_posy - 1 ))
+		fi
+		
+	    elif [ $four_opt -eq 2 ]; then
+		rand=$(( $RANDOM % 2 ))
+		if [ $four_oxp1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			four_posx=$(( $four_posx + 1 ))
+			block=1
+		    else
+			rand=1
+		    fi
+		fi
+		if [ $four_oyp1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			block=1
+			four_posy=$(( $four_posy + 1 ))
+		    else
+			rand=1
+		    fi
+		    
+		fi
+		if [ $four_oxm1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			block=1
+			four_posx=$(( $four_posx - 1 ))
+		    else
+			rand=1
+		    fi
+		    
+		fi
+		if [ $four_oym1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			four_posy=$(( $four_posy - 1 ))
+			block=1
+		    else
+			rand=1
+		    fi
+		fi
+		
+	    elif [ $four_opt -eq 3 ]; then
+		rand=$(( $RANDOM % 3 ))
+
+		if [ $four_oxp1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			four_posx=$(( $four_posx + 1 ))
+			block=1
+		    else
+			rand=$(( $RANDOM % 2 ))
+			block2=1
+		    fi
+		fi
+		if [ $four_oyp1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			block=1
+			four_posy=$(( $four_posy + 1 ))
+		    else
+			if [ $block2 -ne 1 ]; then 
+			    rand=$(( $RANDOM % 2 ))
+			    block2=1
+			else
+			    rand=1
+			fi
+		    	
+		    fi
+		    
+		fi
+		if [ $four_oxm1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			block=1
+			four_posx=$(( $four_posx - 1 ))
+		    else
+			if [ $block2 -ne 1 ]; then 
+			    rand=$(( $RANDOM % 2 ))
+			    block2=1
+			else
+			    rand=1
+			fi
+		    fi
+		    
+		fi
+		if [ $four_oym1 -eq 1 ] && [ $block -ne 1 ]; then
+		    if [ $rand -eq 1 ]; then
+			four_posy=$(( $four_posy - 1 ))
+			block=1
+		    else
+			if [ $block2 -ne 1 ]; then 
+			    rand=$(( $RANDOM % 2 ))
+			    block2=1
+			else
+			    rand=1
+			fi
+		    fi
+		fi
+		
+	    fi
+	    
+	    if [ "${!four_xp1}" == '@' ] && [ "$four_oldpos" != "$four_xp1" ]; then
+		break=1
+	    fi
+	    if [ "${!four_yp1}" == '@' ] && [ "$four_oldpos" != "$four_yp1" ]; then
+		break=1
+	    fi
+	    if [ "${!four_xm1}" == '@' ] && [ "$four_oldpos" != "$four_xm1" ]; then
+		break=1
+	    fi
+	    if [ "${!four_ym1}" == '@' ] && [ "$four_oldpos" != "$four_ym1" ]; then
+		break=1
+	    fi
+
+	    if [ "${!four_xp1}" == '§' ] && [ "$four_oldpos" != "$four_xp1" ]; then
+		four_posx=2
+		four_posy=1
+	    fi
+	    if [ "${!four_yp1}" == '§' ] && [ "$four_oldpos" != "$four_yp1" ]; then
+		four_posx=2
+		four_posy=1
+	    fi
+	    if [ "${!four_xm1}" == '§' ] && [ "$four_oldpos" != "$four_xm1" ]; then
+		four_posx=2
+		four_posy=1
+	    fi
+	    if [ "${!four_ym1}" == '§' ] && [ "$four_oldpos" != "$four_ym1" ]; then
+		four_posx=2
+		four_posy=1
+	    fi
+	    
+	    if [ "${!four_xp1}" == '#' ] && [ "$four_oldpos" != "$four_xp1" ]; then
+		four_hp=$(( $four_hp + 1 ))
+	    fi
+	    if [ "${!four_yp1}" == '#' ] && [ "$four_oldpos" != "$four_yp1" ]; then
+		four_hp=$(( $four_hp + 1 ))
+	    fi
+	    if [ "${!four_xm1}" == '#' ] && [ "$four_oldpos" != "$four_xm1" ]; then
+		four_hp=$(( $four_hp + 1 ))
+	    fi
+	    if [ "${!four_ym1}" == '#' ] && [ "$four_oldpos" != "$four_ym1" ]; then
+		four_hp=$(( $four_hp + 1 ))
+	    fi
+	    
+	    
+	    if [ "${!four_xp1}" == 'M' ] && [ "$four_oldpos" != "$four_xp1" ]; then
+		four_hp=$(( $four_hp - 2 ))
+		eval $four_xp1='+'
+	    fi
+	    if [ "${!four_yp1}" == 'M' ] && [ "$four_oldpos" != "$four_yp1" ]; then
+		four_hp=$(( $four_hp - 2 ))
+		eval $four_yp1='+'
+	    fi
+	    if [ "${!four_xm1}" == 'M' ] && [ "$four_oldpos" != "$four_xm1" ]; then
+		four_hp=$(( $four_hp - 2 ))
+		eval $four_xm1='+'
+	    fi
+	    if [ "${!four_ym1}" == 'M' ] && [ "$four_oldpos" != "$four_ym1" ]; then
+		four_hp=$(( $four_hp - 2 ))
+		eval $four_ym1='+'
+	    fi	
+	    
+
+	    
+	    #                                KÄMPFE                                 #
+
+	    if [ $round -ge 20 ]; then
+		#ZERO
+		if [ "$four_xp1_C" == '0' ]; then
+		    if [ $four_hp_C -gt $zero_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_yp1_C" == '0' ]; then
+		    if [ $four_hp_C -gt $zero_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_xm1_C" == '0' ]; then
+		    if [ $four_hp_C -gt $zero_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_ym1_C" == '0' ]; then
+		    if [ $four_hp_C -gt $zero_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		
+		
+		#ONE
+		if [ "$four_xp1_C" == '1' ]; then
+		    if [ $four_hp_C -gt $one_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_yp1_C" == '1' ]; then
+		    if [ $four_hp_C -gt $one_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_xm1_C" == '1' ]; then
+		    if [ $four_hp_C -gt $one_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_ym1_C" == '1' ]; then
+		    if [ $four_hp_C -gt $one_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		
+		#TWO
+		if [ "$four_xp1_C" == '2' ]; then
+		    if [ $four_hp_C -gt $two_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_yp1_C" == '2' ]; then
+		    if [ $four_hp_C -gt $two_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_xm1_C" == '2' ]; then
+		    if [ $four_hp_C -gt $two_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_ym1_C" == '2' ]; then
+		    if [ $four_hp_C -gt $two_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+
+
+		#THREE
+		if [ "$four_xp1_C" == '3' ]; then
+		    if [ $four_hp_C -gt $three_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_yp1_C" == '3' ]; then
+		    if [ $four_hp_C -gt $three_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_xm1_C" == '3' ]; then
+		    if [ $four_hp_C -gt $three_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+		if [ "$four_ym1_C" == '3' ]; then
+		    if [ $four_hp_C -gt $three_hp_C ]; then
+			four_hp=$(( $four_hp - 1 ))
+		    else
+			four_hp=$(( $four_hp - 4 ))
+		    fi
+		    four_gohome=1
+		fi
+	    fi
+	    
+	    #
+	    # ENDLICH FERTIG
+	    #
+	    
+	fi
+	
+	
+	if [ $go -eq 1 ]; then
+	    four_oldpos=$four_ooldpos
+	fi
+	
+    	eval "$four_oldpos"='+'
+	eval 'x'$four_posx'y'$four_posy='4'
+	
+    else
+	if [ $four_dead -ne 1 ]; then
+	    eval 'x'$four_posx'y'$four_posy='+'
+	    four_dead=1
+	fi
+	
+    fi
+    #
+    #                                                       NEXT PERSON
+    #
+
 
 
     x15y44='A'
     x9y48='C'
     x16y62='B'
     x12y62='D'
+    x11y75='E'
 
     if [ $zero_gohome -eq 1 ]; then
 	gohome zero
@@ -1833,7 +2324,9 @@ while [ $break -eq 0 ]; do
     if [ $three_gohome -eq 1 ]; then
 	gohome three
     fi
-    
+    if [ $four_gohome -eq 1 ]; then
+	gohome four
+    fi
 
     
 
@@ -1938,6 +2431,8 @@ while [ $break -eq 0 ]; do
 		    format='\033[1;46m'
 		elif test ${!xyc} == '3'; then
 		    format='\033[1;46m'
+		elif test ${!xyc} == '4'; then
+		    format='\033[1;46m'
 		elif test ${!xyc} == 'A'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'B'; then
@@ -1945,6 +2440,8 @@ while [ $break -eq 0 ]; do
 		elif test ${!xyc} == 'C'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'D'; then
+		    format='\033[1;47;30m'
+		elif test ${!xyc} == 'E'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'M'; then
 		    format='\033[1;43m'
@@ -1994,6 +2491,8 @@ while [ $break -eq 0 ]; do
 		    format='\033[1;46m'
 		elif test ${!xyc} == '3'; then
 		    format='\033[1;46m'
+		elif test ${!xyc} == '4'; then
+		    format='\033[1;46m'
 		elif test ${!xyc} == 'A'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'B'; then
@@ -2001,6 +2500,8 @@ while [ $break -eq 0 ]; do
 		elif test ${!xyc} == 'C'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'D'; then
+		    format='\033[1;47;30m'
+		elif test ${!xyc} == 'E'; then
 		    format='\033[1;47;30m'
 		elif test ${!xyc} == 'M'; then
 		    format='\033[1;43m'
@@ -2195,6 +2696,51 @@ while [ $break -eq 0 ]; do
 
     dumphp=$dumphp'\033[0m---'
 
+    #NXT
+
+
+    
+    #
+    #   HP: FOUR
+    #
+    
+    i=1
+    tput cup 21 61
+    dumphp=$dumphp"\033[1;46m4\033[0m:"
+    echo -en "\033[1;46m4\033[0m:"
+
+    if [ $four_hp -le 3 ]; then
+	four_hpf='41m'
+    elif [ $four_hp -le 6 ]; then
+	four_hpf='43m'
+    elif [ $four_hp -le 10 ]; then
+	four_hpf='42m'
+    fi
+    
+    dumphp=$dumphp"\033[1;$four_hpf"        
+    echo -en "\033[1;$four_hpf"
+    if [ $four_hp -le 0 ]; then
+	dumphp=$dumphp'\033[1;31;41m \033[1;31;41m \033[1;31;41m DEAD \033[1;31;41m \033[1;31;41m \033[0m'
+	echo -en "\033[1;31;41m   DEAD   \033[0m"
+	four_live=0
+    else
+    
+	while [ $i -le 10 ]; do
+	    if [ $i -le $four_hp ]; then
+		echo -n "I"
+		dumphp=$dumphp"I"
+	    else
+		echo -en "\033[46m "
+		dumphp=$dumphp"\033[46m "
+	    fi
+	    
+	    i=$(( i + 1 ))
+	done
+
+    fi
+
+    dumphp=$dumphp'\033[0m---'
+
     if [ $dump == 'y' ]; then
 	echo "$dumphp" >> .dump_data/$round.txt
     fi
@@ -2217,6 +2763,10 @@ while [ $break -eq 0 ]; do
     fi
 
     if [ $three_live -eq 1 ]; then
+	livecount=$(( $livecount + 1 ))
+    fi
+
+    if [ $four_live -eq 1 ]; then
 	livecount=$(( $livecount + 1 ))
     fi
 
