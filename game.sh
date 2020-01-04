@@ -143,6 +143,65 @@ while [ $x -le 20 ]; do
     x=$(( $x + 1 ))
 done
 
+xwidth 2 2 34
+    height 2 2 13
+    height 2 5 12
+    xwidth 7 2 22
+    height 7 24 10
+    xwidth 17 24 4
+    height 2 28 16
+    height 2 35 18
+    xwidth 19 15 20
+    height 9 15 11
+    xwidth 9 15 6
+    height 9 20 2
+    xwidth 13 5 10
+    xwidth 9 20 4
+    xwidth 9 28 12
+    height 9 39 7
+    xwidth 15 2 37
+    xwidth 4 5 22
+    height 4 26 10
+
+    ### NXT SITE
+
+    height 4 49 1
+    height 6 49 1
+    xwidth 5 35 20
+    xwidth 3 35 15
+    xwidth 7 35 15
+    height 5 55 6
+    xwidth 10 42 14
+    height 10 42 9
+    xwidth 19 42 36
+    height 10 77 10
+    xwidth 10 57 20
+    height 7 57 4
+    xwidth 7 57 9
+    xwidth 8 65 5
+    xwidth 7 69 8
+    height 3 76 5
+    xwidth 3 69 7
+    xwidth 2 65 5
+    xwidth 3 57 9
+    height 3 67 6
+    height 4 57 2
+    xwidth 5 57 19
+    height 10 60 6
+    xwidth 15 53 8
+    height 12 53 4
+    xwidth 12 46 7
+    height 12 46 5
+    xwidth 16 42 4
+    height 13 48 6
+    xwidth 17 48 29
+    height 11 64 4
+    height 11 73 4
+    xwidth 15 64 10
+    height 16 70 1
+    height 16 67 1
+    xwidth 13 61 4
+
 round=0
     break=0
 while [ $break -eq 0 ]; do
@@ -219,64 +278,7 @@ while [ $break -eq 0 ]; do
     
     x2y1='K'
     
-    xwidth 2 2 34
-    height 2 2 13
-    height 2 5 12
-    xwidth 7 2 22
-    height 7 24 10
-    xwidth 17 24 4
-    height 2 28 16
-    height 2 35 18
-    xwidth 19 15 20
-    height 9 15 11
-    xwidth 9 15 6
-    height 9 20 2
-    xwidth 13 5 10
-    xwidth 9 20 4
-    xwidth 9 28 12
-    height 9 39 7
-    xwidth 15 2 37
-    xwidth 4 5 22
-    height 4 26 10
-
-    ### NXT SITE
-
-    height 4 49 1
-    height 6 49 1
-    xwidth 5 35 20
-    xwidth 3 35 15
-    xwidth 7 35 15
-    height 5 55 6
-    xwidth 10 42 14
-    height 10 42 9
-    xwidth 19 42 36
-    height 10 77 10
-    xwidth 10 57 20
-    height 7 57 4
-    xwidth 7 57 9
-    xwidth 8 65 5
-    xwidth 7 69 8
-    height 3 76 5
-    xwidth 3 69 7
-    xwidth 2 65 5
-    xwidth 3 57 9
-    height 3 67 6
-    height 4 57 2
-    xwidth 5 57 19
-    height 10 60 6
-    xwidth 15 53 8
-    height 12 53 4
-    xwidth 12 46 7
-    height 12 46 5
-    xwidth 16 42 4
-    height 13 48 6
-    xwidth 17 48 29
-    height 11 64 4
-    height 11 73 4
-    xwidth 15 64 10
-    height 16 70 1
-    height 16 67 1
-    xwidth 13 61 4
+    
 
     if [ $zero_hp -gt 10 ]; then
 	zero_hp=10
