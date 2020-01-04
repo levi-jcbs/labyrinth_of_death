@@ -38,11 +38,11 @@ while [ 1 ]; do
 	i=$(( $i + 1 ))
     done
     
-    tput cup 21 70
-    echo '['$count']  '
+    tput cup 21 74
+    echo -n '['$count'] '
 
     tput cup 0 0
-    echo '                                                                               '
+    echo -e '                                                                               '
     
     read -sn1 com
 
@@ -102,7 +102,7 @@ while [ 1 ]; do
 		    i=$(( $i + 1 ))
 		done
 		
-		tput cup 21 70
+		tput cup 21 74
 		echo '['$count']  '
 		
 		tput cup 0 0
